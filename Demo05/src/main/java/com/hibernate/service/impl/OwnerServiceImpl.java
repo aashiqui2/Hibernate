@@ -1,0 +1,56 @@
+package com.hibernate.service.impl;
+
+import java.util.Objects;
+import java.util.UUID;
+
+import com.hibernate.config.PropertiesConfig;
+import com.hibernate.dto.OwnerDTO;
+import com.hibernate.exception.OwnerNotFoundException;
+import com.hibernate.repository.OwnerRepository;
+import com.hibernate.service.OwnerService;
+import com.hibernate.util.MapperUtil;
+import com.hibernate.repository.impl.OwnerRepositoryImpl;
+import com.hibernate.entity.Owner;
+
+public class OwnerServiceImpl implements OwnerService {
+	private OwnerRepository ownerRepository;
+	private static final String OWNER_NOT_FOUND = "owner.not.found";
+	private static final PropertiesConfig PROPERTIES_CONFIG = PropertiesConfig.getInstance();
+
+	public OwnerServiceImpl() {
+		this.ownerRepository = new OwnerRepositoryImpl();
+	}
+
+	@Override
+	public void saveOwner(OwnerDTO ownerDTO) {
+		Owner owner = MapperUtil.convertOwnerDtoToEntity(ownerDTO);
+		ownerRepository.saveOwner(owner);
+	}
+
+	@Override
+	public OwnerDTO findOwner(String ownerId) throws OwnerNotFoundException {
+		Owner owner = ownerRepository.findOwner(UUID.fromString(ownerId));
+		if (Objects.isNull(owner)) {
+			throw new OwnerNotFoundException(String.format(PROPERTIES_CONFIG.getProperty(OWNER_NOT_FOUND), ownerId));
+		}
+		return MapperUtil.convertOwnerEntityToDto(owner);
+	}
+
+	@Override
+	public void updatePetDetails(String ownerId, String petName) throws OwnerNotFoundException {
+		Owner owner = ownerRepository.findOwner(UUID.fromString(ownerId));
+		if (Objects.isNull(owner)) {
+			throw new OwnerNotFoundException(String.format(PROPERTIES_CONFIG.getProperty(OWNER_NOT_FOUND), ownerId));
+		}
+		ownerRepository.updatePetDetails(UUID.fromString(ownerId), petName);
+	}
+
+	@Override
+	public void deleteOwner(String ownerId) throws OwnerNotFoundException {
+		Owner owner = ownerRepository.findOwner(UUID.fromString(ownerId));
+		if (Objects.isNull(owner)) {
+			throw new OwnerNotFoundException(String.format(PROPERTIES_CONFIG.getProperty(OWNER_NOT_FOUND), ownerId));
+		}
+		ownerRepository.deleteOwner(UUID.fromString(ownerId));
+	}
+}
