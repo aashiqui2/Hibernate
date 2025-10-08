@@ -60,7 +60,9 @@ You can learn these topics from my GitHub repositories and YouTube playlists.
 
 <h3 align="left">🚀 How to Run the Demos</h3>
 <ol>
-    <li>Clone the repository.</li>
+   <li>Clone the repository:<br>
+        <pre><code>git clone https://github.com/aashiqui2/Hibernate.git</code></pre>
+    </li>
     <li>Import the project into your preferred IDE as a <b>Maven Project</b>.</li>
     <li>Configure the database connection, if necessary.</li>
     <li>Run the application and test the methods.</li>
